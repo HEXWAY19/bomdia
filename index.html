@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALERTA DE SEGURANÇA ⚠️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #ffdeeb;
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Evita que ela role a página para achar o botão */
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- URSINHO ADAPTADO --- */
+        .bear {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            background: #b5835a;
+            border-radius: 50% 50% 45% 45%;
+            margin: 20px auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .bear::before, .bear::after {
+            content: ''; position: absolute;
+            width: 35px; height: 35px;
+            background: #b5835a; border-radius: 50%;
+            top: -8px; z-index: -1;
+        }
+        .bear::before { left: -5px; }
+        .bear::after { right: -5px; }
+        .eyes {
+            position: absolute; top: 40px; width: 100%;
+            display: flex; justify-content: space-around;
+            padding: 0 20px;
+        }
+        .eye { width: 12px; height: 12px; background: #333; border-radius: 50%; }
+        .nose {
+            position: absolute; top: 60px; left: 50%;
+            transform: translateX(-50%);
+            width: 20px; height: 12px; background: #6d4c41; border-radius: 50%;
+        }
+        .hand {
+            position: absolute; width: 35px; height: 35px;
+            background: #b5835a; border-radius: 50%;
+            right: -15px; top: 65px;
+            transform-origin: bottom left;
+            animation: wave 1.5s infinite ease-in-out;
+        }
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-30deg); }
+        }
+
+        /* --- TELAS --- */
+        #protecao-tela {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            color: lime;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .container { 
+            display: none; 
+            padding: 15px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 { font-size: 1.5rem; color: #ff4d6d; margin: 10px 0; }
+        p { font-size: 1rem; padding: 0 10px; }
+
+        .area-botoes {
+            position: relative;
+            width: 100%;
+            height: 300px; /* Área limitada para o botão fugir no celular */
+            margin-top: 20px;
+        }
+
+        .btn-engracado {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #btn-sim { 
+            background: #4caf50; 
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        #btn-nao { 
+            background: #f44336; 
+            color: white; 
+            position: absolute;
+            transition: 0.2s;
+            white-space: nowrap;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="protecao-tela">
+        <h2 style="text-align: center;">SISTEMA INFECTADO... 👾</h2>
+        <p id="status-texto">Escaneando possível problema...</p>
+        <button onclick="iniciar()" style="padding: 15px 30px; background: lime; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem;">CORRIGIR ERRO</button>
+    </div>
+
+    <div class="container" id="main-content" style="display: none;">
+        <div class="bear">
+            <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+            <div class="nose"></div>
+            <div class="hand"></div>
+        </div>
+
+        <h1>BOM DIA, MINHA SURTADINHA! ❤️</h1>
+        <p>Você aceita que eu sou o melhor namorado do mundo e que sempre tenho razão?</p>
+
+        <div class="area-botoes" id="area">
+            <button id="btn-sim" class="btn-engracado" onclick="aceitou()">OBVIAMENTE SIM</button>
+            <button id="btn-nao" class="btn-engracado" onmouseover="fugir()" ontouchstart="fugir()">NUNCA</button>
+        </div>
+    </div>
+
+    <script>
+        function iniciar() {
+            const status = document.getElementById('status-texto');
+            status.innerText = "ERRO: Nível de dengo acima do permitido!";
+            
+            setTimeout(() => {
+                alert("⚠️ ALERTA: O celular detectou que você acordou muito linda hoje.");
+                alert("Para continuar, você deve clicar em OK e sorrir.");
+                document.getElementById('protecao-tela').style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+            }, 800);
+        }
+
+        function fugir() {
+            const btnNao = document.getElementById('btn-nao');
+            const area = document.getElementById('area');
+            
+            // Limita a fuga dentro da área visível do celular
+            const maxX = area.clientWidth - btnNao.offsetWidth;
+            const maxY = area.clientHeight - btnNao.offsetHeight;
+
+            const x = Math.floor(Math.random() * maxX);
+            const y = Math.floor(Math.random() * maxY);
+            
+            btnNao.style.left = x + 'px';
+            btnNao.style.top = y + 'px';
+
+            const frases = ["Errou!", "Tente de novo", "Quase!", "Nem vem", "Tá lenta!", "Clica no SIM!"];
+            btnNao.innerText = frases[Math.floor(Math.random() * frases.length)];
+        }
+
+        function aceitou() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            
+            document.querySelector('.hand').style.animation = "wave 0.3s infinite";
+            
+            setTimeout(() => {
+                alert("Muito bem, aceitar isso é uma decisão linda, te amo nonhonha ❤️");
+            }, 500);
+        }
+    </script>
+</body>
+</html>
